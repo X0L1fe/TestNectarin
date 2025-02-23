@@ -38,12 +38,12 @@ def download():
     except httpx.RequestError as e:
         print (f'Ошибка: {str(e)}')   
 
-def count_cars():
+def count_cars(file_path='cars.xml'):
     """
     Сколько всего автомобилей содержится в каталоге
     """
     try:
-        tree = ET.parse('cars.xml')
+        tree = ET.parse(file_path)
         root = tree.getroot()
         # каждый автомобиль представлен элементом <car>
         cars = root.findall('car')
@@ -58,7 +58,7 @@ def middle_price():
     Найти среднюю цену автомобилей
     """
     try:
-        tree = ET.parse('cars.xml')
+        tree = ET.parse(file_path)
         root = tree.getroot()
         prices = []
         # каждый автомобиль представлен элементом <car>
@@ -77,7 +77,7 @@ def find_Ford():
     Сколько автомобилей Ford 2015 года выпуска в каталоге
     """
     try:
-        tree = ET.parse('cars.xml')
+        tree = ET.parse(file_path)
         root = tree.getroot()
         count = 0
         for car in root.findall('car'):
@@ -98,7 +98,7 @@ def min_price_Toyota_Hilux():
     И какой год выпуска будет
     """
     try:
-        tree = ET.parse('cars.xml')
+        tree = ET.parse(file_path)
         root = tree.getroot()
         min_price = float('inf')
         min_car = None
