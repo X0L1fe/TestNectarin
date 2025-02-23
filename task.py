@@ -1,5 +1,9 @@
-import httpx
+import unittest
 import xml.etree.ElementTree as ET
+import os
+from unittest.mock import patch
+from io import StringIO
+import httpx
 
 FILE = "https://strategic.nectarin.ru/test_tasks/cars.xml"
 """
@@ -38,7 +42,7 @@ def download():
     except httpx.RequestError as e:
         print (f'Ошибка: {str(e)}')   
 
-def count_cars(file_path='cars.xml'):
+def count_cars(file_path):
     """
     Сколько всего автомобилей содержится в каталоге
     """
@@ -53,7 +57,7 @@ def count_cars(file_path='cars.xml'):
     except Exception as e:
         print(f"Ошибка при обработке XML: {str(e)}")
 
-def middle_price():
+def middle_price(file_path):
     """
     Найти среднюю цену автомобилей
     """
@@ -72,7 +76,7 @@ def middle_price():
         print(f"Ошибка при обработке XML: {str(e)}")
     
 
-def find_Ford():
+def find_Ford(file_path):
     """
     Сколько автомобилей Ford 2015 года выпуска в каталоге
     """
@@ -92,7 +96,7 @@ def find_Ford():
         print(f"Ошибка при обработке XML: {str(e)}")
         
 
-def min_price_Toyota_Hilux():
+def min_price_Toyota_Hilux(file_path):
     """
     Найти автомобиль с минимальной ценой Toyota Hilux в каталоге
     И какой год выпуска будет
@@ -118,29 +122,56 @@ def min_price_Toyota_Hilux():
     except Exception as e:
         print(f"Ошибка при обработке XML: {str(e)}")
 
-while MENU == True:
-    print("""
-          Меню:
-          [1] Скачать XML-файл
-          [2] Посчитать количество автомобилей
-          [3] Найти среднюю цену автомобилей
-          [4] Найти автомобиль Ford 2015 года выпуска
-          [5] Найти автомобиль с минимальной ценой Toyota Hilux
-          [6] Выйти
-          """)
-    choice = input("Выберите пункт меню: ")
-    
+def run_tests():
+    """
+    Запускает тесты.
+    """
+    print("Запуск тестов...")
+    # Загружаем тесты из текущего модуля
+    test_suite = unittest.defaultTestLoader.discover('.', pattern='test_task.py')
+    # Запускаем тесты
+    test_runner = unittest.TextTestRunner()
+    test_runner.run(test_suite)
+
+def menu_main():
+    while MENU == True:
+        print("""
+        Меню:
+        [1] Скачать XML-файл
+        [2] Посчитать количество автомобилей
+        [3] Найти среднюю цену автомобилей
+        [4] Найти автомобиль Ford 2015 года выпуска
+        [5] Найти автомобиль с минимальной ценой Toyota Hilux
+        [6] Выйти
+    """)
+        choice = input("Выберите пункт меню: ")
+        
+        if choice == '1':
+            download()
+        elif choice == '2':
+            count_cars('cars.xml')
+        elif choice == '3':
+            middle_price('cars.xml')
+        elif choice == '4':
+            find_Ford('cars.xml')
+        elif choice == '5':
+            min_price_Toyota_Hilux('cars.xml')
+        elif choice == '6':
+            MENU = False
+        else:
+            print("Неверный ввод. Попробуйте снова.")
+
+if __name__ == '__main__':
+    choice = input(
+    """
+    Выберите, что хотите сделать:
+    [1] Выбрать пункт меню
+    [2] Запустить тесты
+    """)
     if choice == '1':
-        download()
+        menu_main()
     elif choice == '2':
-        count_cars()
-    elif choice == '3':
-        middle_price()
-    elif choice == '4':
-        find_Ford()
-    elif choice == '5':
-        min_price_Toyota_Hilux()
-    elif choice == '6':
-        MENU = False
+        # create_test_xml()
+        run_tests()
     else:
         print("Неверный ввод. Попробуйте снова.")
